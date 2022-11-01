@@ -1,4 +1,4 @@
-# chess-ai
+# chess-ai [WIP!]
 
 As simple as that. :)
 
