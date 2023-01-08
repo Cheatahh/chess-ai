@@ -18,7 +18,7 @@ The following algorithm are being used:
 
 
 ## Basic Information
-[1.0 Using Julia]("file:1.0 UsingJulia.ipynb")
+[1.0 Using Julia](<1.0 UsingJulia.ipynb>)
 ### 1.1 Chess.jl
 ### 1.2 BasicGame 
 
