@@ -1,0 +1,31 @@
+### Entity Player
+
+Die Spieler-Implementation (Methode) der `next_move` Funktion setzt einer Benutzer-Eingabe voraus, welche in Julia mithilfe der `readline`(`stream`) Funktion erreicht werden kann.
+
+Das Problem dabei ist, dass der Benutzer jeden beliebigen Text als Eingabe formulieren kann, auch solche, die nicht einer validen Zugeingabe entsprechen. Um einer solchen fehlerhaften Eingabe entgegenzuwirken, definieren wir die folgende Funktion:
+
+function validate_userinput(input::String) # move to test explain what changed and why we not use this
+    # check pawn -> f.e. queen
+    if match(r"^[a-hA-H][1-8][a-hA-H][1-8]$", input) === nothing
+        return "Invalid input '$(input)'"
+    end
+    return nothing
+end
+
+Der reguläre Ausdruck `^[a-h][1-8][a-h][1-8]$` akzeptiert hierbei nur Eingabetexte, welche aus zwei Feldern bestehen: Start & Ende. Da es sich bei der X- und Y-Indizierung auf einem Schachbrett um Koordinaten im Bereich (a-h) und (a-8) handelt, werden diese zusätzlich auf die entsprechenden Bereiche begrenzt. Je nach Status des Spiels ist eine Angabe der Startfelder theoretisch redundant, jedoch entschieden wir uns, die verbose Form als Eingabenorm beizubehalten.
+
+Falls die Eingabe der `validate_userinput` Funktion einen syntaktisch validen Zug aufweist, so gibt diese `nothing` zurück. Der Rückgabewert ist als eine Art Fehler zu interpretieren. Ist die Eingabe invalid, so wird ein String mit der Fehlernachricht zurückgegeben.
+
+Des Weiteren ist zu prüfen, ob es sich bei dem syntaktisch validen Zug um einen tatsächlich legalen und durchführbaren Zug handelt. Beispielsweise könnte der Benutzer in der Startposition den Zug `"e2f2"` eingeben, welcher den Bauer beauftragen würde, um ein Feld nach rechts zu gehen. Dieser Zug ist laut Spielregeln nicht möglich und muss daher unterbunden werden. Hierzu definieren wir die folgende Funktion:
+
+function validate_legal_move(board::Board, move::Move) # move to test explain what changed and why we not use this
+    all_legal_moves = moves(board)
+    if move ∉ all_legal_moves
+        return("Illegal move '$(move)'")
+    end
+    return nothing
+end
+
+Mithilfe der `moves(board)` Funktion können wir alle legalen Züge auflisten. Anschließend ist zu prüfen, ob sich der Zugkandidat in der entsprechenden Liste befindet. In Julia kann dies durch die Operatoren `∈` und `∉` durchgeführt werden. Die `validate_legal_move` Funktion gibt bei einem Fehler ebenfalls einen String zurück, anderweitig `nothing`.
+
+Mit den beiden Prüffunktionen können wir anschließend die `next_move` Funktion für einen Player definieren:
